@@ -41,4 +41,8 @@ public class StudentService {
     public Student getStudentByTelegramId(int telegramId) {
         return studentRepository.getByTelegramId(telegramId).orElseThrow(NoSuchElementException::new);
     }
+
+    public Integer getStudentIdByTelegramId(Integer telegramId) {
+        return studentRepository.getByTelegramId(telegramId).orElseThrow(NoSuchElementException::new).getId();
+    }
 }
