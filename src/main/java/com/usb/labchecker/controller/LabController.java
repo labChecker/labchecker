@@ -5,6 +5,7 @@ import com.usb.labchecker.model.service.LabService;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Set;
 
 @RestController
 @RequestMapping("/api/v1/labs")
@@ -28,6 +29,12 @@ public class LabController {
     @GetMapping
     public List<Lab> getLabListByStudentId(@RequestParam(name = "studentId") Integer studentId){
         return labService.getLabListByStudentId(studentId);
+    }
+
+    @GetMapping
+    public Set<Lab> getLabListByStudentIdAndSubjectId(@RequestParam(name = "studentId") Integer studentId,
+                                                      @RequestParam(name = "subjectId") Integer subjectId){
+        return labService.getLabListByStudentIdAndSubjectId(studentId, subjectId);
     }
 
 }
