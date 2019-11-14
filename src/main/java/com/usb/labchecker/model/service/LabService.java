@@ -4,6 +4,7 @@ import com.usb.labchecker.model.entity.Course;
 import com.usb.labchecker.model.entity.Group;
 import com.usb.labchecker.model.entity.Lab;
 import com.usb.labchecker.model.repository.LabRepository;
+import com.usb.labchecker.model.repository.LabResultRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -15,11 +16,13 @@ public class LabService {
     private final LabRepository labRepository;
     private final StudentService studentService;
     private final CourseService courseService;
+    private final LabResultRepository labResultRepository;
 
-    public LabService(LabRepository labRepository, StudentService studentService, CourseService courseService) {
+    public LabService(LabRepository labRepository, StudentService studentService, CourseService courseService, LabResultRepository labResultRepository) {
         this.labRepository = labRepository;
         this.studentService = studentService;
         this.courseService = courseService;
+        this.labResultRepository = labResultRepository;
     }
 
     public Lab getOne(int id) {
@@ -35,5 +38,12 @@ public class LabService {
         Group group = studentService.getStudentByTelegramId(telegramId).getGroup();
         courseService.getAllCoursesForGroupId(group).forEach(courseList::add);
         return labRepository.findAllByCourseIsIn(courseList);
+    }
+
+    public List<Lab> getLabListByStudentId(Integer studentId) {
+        List<Lab> resultList = new ArrayList<>();
+        labResultRepository.findAllByStudent(studentService.getOne(studentId))
+                .forEach(e -> resultList.add(e.getLab()));
+        return resultList;
     }
 }
