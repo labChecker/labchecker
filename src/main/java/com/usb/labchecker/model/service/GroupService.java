@@ -4,7 +4,10 @@ import com.usb.labchecker.model.entity.Group;
 import com.usb.labchecker.model.repository.GroupRepository;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+import java.util.Map;
 import java.util.NoSuchElementException;
+import java.util.stream.Collectors;
 
 @Service
 public class GroupService {
@@ -25,6 +28,12 @@ public class GroupService {
 
     public Group getByName(String name) {
         return groupRepository.findByName(name).orElseThrow(NoSuchElementException::new);
+    }
+
+    public Map<Integer, String> getGroupListMap() {
+        List <Group> groups = (List<Group>) getAllGroups();
+        return groups.stream()
+                .collect(Collectors.toMap(Group::getId, Group::getName));
     }
 
 }
