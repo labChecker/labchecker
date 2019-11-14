@@ -45,4 +45,8 @@ public class StudentService {
     public Integer getStudentIdByTelegramId(Integer telegramId) {
         return studentRepository.getByTelegramId(telegramId).orElseThrow(NoSuchElementException::new).getId();
     }
+//
+//    public Integer getStudentVariantByGithubId(String githubId) {
+//        return studentRepository.findByGithubLink(githubId).getVariant();
+//    }
 }
