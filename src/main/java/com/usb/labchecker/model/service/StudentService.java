@@ -1,18 +1,30 @@
 package com.usb.labchecker.model.service;
 
+import com.usb.labchecker.model.dto.GithubUserDto;
 import com.usb.labchecker.model.dto.StudentDto;
 import com.usb.labchecker.model.entity.Student;
 import com.usb.labchecker.model.repository.StudentRepository;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.web.client.RestTemplateBuilder;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestTemplate;
 
 import java.util.NoSuchElementException;
+import java.util.Objects;
 
 @Service
 public class StudentService {
+
+    private final String GITHUB_API_URL_PREFIX = "https://api.github.com/user/";
+    private RestTemplate restTemplate;
     private final StudentRepository studentRepository;
     private final GroupService groupService;
 
-    public StudentService(StudentRepository studentRepository, GroupService groupService) {
+    public StudentService(RestTemplateBuilder restTemplate,
+                          StudentRepository studentRepository,
+                          GroupService groupService) {
+        this.restTemplate = restTemplate.build();
         this.studentRepository = studentRepository;
         this.groupService = groupService;
     }
@@ -45,8 +57,17 @@ public class StudentService {
     public Integer getStudentIdByTelegramId(Integer telegramId) {
         return studentRepository.getByTelegramId(telegramId).orElseThrow(NoSuchElementException::new).getId();
     }
-//
-//    public Integer getStudentVariantByGithubId(String githubId) {
-//        return studentRepository.findByGithubLink(githubId).getVariant();
-//    }
+
+    public Integer getStudentVariantByGithubId(Integer githubId) {
+        RestTemplate restTemplate = new RestTemplate();
+        try {
+            ResponseEntity<GithubUserDto> answer = restTemplate
+                    .getForEntity(GITHUB_API_URL_PREFIX +
+                            githubId, GithubUserDto.class);
+            return studentRepository.findByGithubLink(Objects.requireNonNull(answer.getBody()).getLogin()).getVariant();
+        } catch (Exception e) {
+
+        }
+        return 0;
+    }
 }

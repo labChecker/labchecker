@@ -38,5 +38,6 @@ public class Student {
     @Column(name = "telegram_id")
     private Integer telegramId;
 
-
+    @Column(name = "variant")
+    private Integer variant;
 }

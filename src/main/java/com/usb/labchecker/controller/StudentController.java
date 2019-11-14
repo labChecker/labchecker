@@ -33,11 +33,11 @@ public class StudentController {
     public Integer getStudentIdByTelegramId(@PathVariable("id") Integer telegramId){
         return studentService.getStudentIdByTelegramId(telegramId);
     }
-//
-//    @GetMapping("/{githubId}/variant")
-//    public Integer getStudentVariantByGithubId(@PathVariable("id") Integer githubId){
-//        return studentService.getStudentVariantByGithubId(githubId);
-//    }
+
+    @GetMapping("/{githubId}/variant")
+    public Integer getStudentVariantByGithubId(@PathVariable("githubId") Integer githubId){
+        return studentService.getStudentVariantByGithubId(githubId);
+    }
 
 
 }
