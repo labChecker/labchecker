@@ -1,5 +1,6 @@
 package com.usb.labchecker.model.service;
 
+import com.usb.labchecker.model.dto.LabResultDto;
 import com.usb.labchecker.model.entity.Lab;
 import com.usb.labchecker.model.entity.LabResult;
 import com.usb.labchecker.model.repository.CourseRepository;
@@ -61,5 +62,18 @@ public class LabResultService {
                 .filter(labResultListBySubject::contains)
                 .collect(Collectors.toSet());
 
+    }
+
+    public LabResult addLabResult(LabResultDto labResultDto) {
+        LabResult labResultToAdd = LabResult.builder()
+                .lab(labResultDto.getLab())
+                .githubRepositoryLink(labResultDto.getGithubRepositoryLink())
+                .mark(labResultDto.getMark())
+                .student(labResultDto.getStudent())
+                .variant(labResultDto.getVariant())
+                .build();
+
+        labResultRepository.save(labResultToAdd);
+        return labResultToAdd;
     }
 }

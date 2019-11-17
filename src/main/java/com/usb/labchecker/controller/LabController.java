@@ -31,7 +31,7 @@ public class LabController {
         return labService.getLabListByStudentId(studentId);
     }
 
-    @GetMapping
+    @GetMapping("/by_student_and_subject")
     public Set<Lab> getLabListByStudentIdAndSubjectId(@RequestParam(name = "studentId") Integer studentId,
                                                       @RequestParam(name = "subjectId") Integer subjectId){
         return labService.getLabListByStudentIdAndSubjectId(studentId, subjectId);

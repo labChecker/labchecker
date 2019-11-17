@@ -3,6 +3,8 @@ package com.usb.labchecker.model.service;
 import com.usb.labchecker.model.dto.GithubUserDto;
 import com.usb.labchecker.model.dto.StudentDto;
 import com.usb.labchecker.model.entity.Student;
+import com.usb.labchecker.model.entity.Variant;
+import com.usb.labchecker.model.repository.LabResultRepository;
 import com.usb.labchecker.model.repository.StudentRepository;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.web.client.RestTemplateBuilder;
@@ -19,14 +21,17 @@ public class StudentService {
     private final String GITHUB_API_URL_PREFIX = "https://api.github.com/user/";
     private RestTemplate restTemplate;
     private final StudentRepository studentRepository;
+    private final LabResultRepository labResultRepository;
     private final GroupService groupService;
 
     public StudentService(RestTemplateBuilder restTemplate,
                           StudentRepository studentRepository,
-                          GroupService groupService) {
+                          GroupService groupService,
+                          LabResultRepository labResultRepository) {
         this.restTemplate = restTemplate.build();
         this.studentRepository = studentRepository;
         this.groupService = groupService;
+        this.labResultRepository = labResultRepository;
     }
 
     public Student getOne(int id) {
@@ -58,16 +63,17 @@ public class StudentService {
         return studentRepository.getByTelegramId(telegramId).orElseThrow(NoSuchElementException::new).getId();
     }
 
-    public Integer getStudentVariantByGithubId(Integer githubId) {
+    public Variant getStudentVariantByGithubId(Integer githubId) {
         RestTemplate restTemplate = new RestTemplate();
         try {
             ResponseEntity<GithubUserDto> answer = restTemplate
                     .getForEntity(GITHUB_API_URL_PREFIX +
                             githubId, GithubUserDto.class);
-            return studentRepository.findByGithubLink(Objects.requireNonNull(answer.getBody()).getLogin()).getVariant();
+            Student studentToFind = studentRepository.findByGithubLink(Objects.requireNonNull(answer.getBody()).getLogin());
+            return labResultRepository.findAll().iterator().next().getVariant();
         } catch (Exception e) {
 
         }
-        return 0;
+        return new Variant();
     }
 }

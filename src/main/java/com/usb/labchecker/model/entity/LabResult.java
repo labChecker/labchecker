@@ -1,15 +1,17 @@
 package com.usb.labchecker.model.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import lombok.Data;
-import lombok.Getter;
+import lombok.*;
 
 import javax.persistence.*;
 
 @Table(name = "lab_results")
 @Entity
 @Data
+@AllArgsConstructor
+@NoArgsConstructor
 @Getter
+@Builder
 public class LabResult {
 
     @Id
@@ -34,4 +36,5 @@ public class LabResult {
 
     @Column(name = "mark")
     private Double mark;
+
 }

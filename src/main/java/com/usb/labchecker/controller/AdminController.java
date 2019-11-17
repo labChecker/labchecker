@@ -18,7 +18,10 @@ public class AdminController {
     private final LabService labService;
     private final LabResultService labResultService;
 
-    public AdminController(StudentService studentService, SubjectService subjectService, LabService labService, LabResultService labResultService) {
+    public AdminController(StudentService studentService,
+                           SubjectService subjectService,
+                           LabService labService,
+                           LabResultService labResultService) {
         this.studentService = studentService;
         this.subjectService = subjectService;
         this.labService = labService;
@@ -26,27 +29,27 @@ public class AdminController {
     }
 
     @GetMapping("students")
-    Iterable<Student> getStudents() {
+    public Iterable<Student> getStudents() {
         return studentService.getAllStudents();
     }
 
     @GetMapping("subjects")
-    Iterable<Subject> getSubjects() {
+    public Iterable<Subject> getSubjects() {
         return subjectService.getAllSubjects();
     }
 
     @GetMapping("labs")
-    Iterable<Lab> getLabs() {
+    public Iterable<Lab> getLabs() {
         return labService.getAllLabs();
     }
 
     @GetMapping("labresults")
-    Iterable<LabResult> getLabResults() {
+    public Iterable<LabResult> getLabResults() {
         return labResultService.getAllLabResults();
     }
 
     @GetMapping("students/{id}")
-    Student getStudentById(@PathVariable("id") int id) {
+    public Student getStudentById(@PathVariable("id") int id) {
         return studentService.getOne(id);
     }
 }

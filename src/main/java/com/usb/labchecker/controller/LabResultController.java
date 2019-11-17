@@ -1,5 +1,6 @@
 package com.usb.labchecker.controller;
 
+import com.usb.labchecker.model.dto.LabResultDto;
 import com.usb.labchecker.model.entity.LabResult;
 import com.usb.labchecker.model.service.LabResultService;
 import org.springframework.web.bind.annotation.*;
@@ -16,13 +17,18 @@ public class LabResultController {
     }
 
     @GetMapping
-    Iterable<LabResult> getAllLabResultsForStudent(@RequestParam(name = "studentId") Integer studentId) {
+    public Iterable<LabResult> getLabResultsByStudentId(@RequestParam(name = "studentId") Integer studentId) {
         return labResultService.findLabResultsForStudent(studentId);
     }
 
-    @GetMapping
+    @GetMapping("/by_student_and_subject")
     public Set<LabResult> getLabResultsByStudentIdAndSubjectId(@RequestParam(name = "studentId") Integer studentId,
                                                                @RequestParam(name = "subjectId") Integer subjectId){
         return labResultService.getLabResultsByStudentIdAndSubjectId(studentId, subjectId);
+    }
+
+    @PostMapping
+    public LabResult addLabResult(@RequestBody LabResultDto labResultDto){
+        return labResultService.addLabResult(labResultDto);
     }
 }
