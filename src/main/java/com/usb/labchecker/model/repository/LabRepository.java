@@ -9,5 +9,5 @@ import java.util.List;
 
 @Repository
 public interface LabRepository extends CrudRepository<Lab, Integer> {
-    Iterable<Lab> findAllByCourseIsIn(List<Course> courseList);
+    List<Lab> findAllByCourseIsIn(List<Course> courseList);
 }

@@ -1,5 +1,6 @@
 package com.usb.labchecker.controller;
 
+import com.usb.labchecker.model.dto.LabByStudentIdAndSubjectIdDto;
 import com.usb.labchecker.model.entity.Lab;
 import com.usb.labchecker.model.service.LabService;
 import org.springframework.web.bind.annotation.*;
@@ -32,8 +33,8 @@ public class LabController {
     }
 
     @GetMapping("/by_student_and_subject")
-    public Set<Lab> getLabListByStudentIdAndSubjectId(@RequestParam(name = "studentId") Integer studentId,
-                                                      @RequestParam(name = "subjectId") Integer subjectId){
+    public Set<LabByStudentIdAndSubjectIdDto> getLabListByStudentIdAndSubjectId(@RequestParam(name = "studentId") Integer studentId,
+                                                                                @RequestParam(name = "subjectId") Integer subjectId){
         return labService.getLabListByStudentIdAndSubjectId(studentId, subjectId);
     }
 

@@ -1,9 +1,9 @@
 package com.usb.labchecker.model.service;
 
+import com.usb.labchecker.model.dto.LabByStudentIdAndSubjectIdDto;
 import com.usb.labchecker.model.entity.Course;
 import com.usb.labchecker.model.entity.Group;
 import com.usb.labchecker.model.entity.Lab;
-import com.usb.labchecker.model.entity.Subject;
 import com.usb.labchecker.model.repository.CourseRepository;
 import com.usb.labchecker.model.repository.LabRepository;
 import com.usb.labchecker.model.repository.LabResultRepository;
@@ -50,9 +50,8 @@ public class LabService {
     }
 
     public Iterable<Lab> getAllLabsForTelegramId(int telegramId) {
-        List<Course> courseList = new ArrayList<>();
         Group group = studentService.getStudentByTelegramId(telegramId).getGroup();
-        courseService.getAllCoursesForGroupId(group).forEach(courseList::add);
+        List<Course> courseList = new ArrayList<>(courseService.getAllCoursesForGroupId(group));
         return labRepository.findAllByCourseIsIn(courseList);
     }
 
@@ -63,18 +62,24 @@ public class LabService {
         return resultList;
     }
 
-    public Set<Lab> getLabListByStudentIdAndSubjectId(Integer studentId, Integer subjectId) {
+    public Set<LabByStudentIdAndSubjectIdDto> getLabListByStudentIdAndSubjectId(Integer studentId, Integer subjectId) {
         List<Lab> labListByStudents = new ArrayList<>();
         labResultRepository.findAllByStudent(studentService.getOne(studentId))
                 .forEach(e -> labListByStudents.add(e.getLab()));
 
-        List<Lab> labListBySubjects = (List<Lab>) labRepository.findAllByCourseIsIn(courseRepository.findAllBySubject(subjectRepository
+        List<Lab> labListBySubjects = labRepository.findAllByCourseIsIn(courseRepository.findAllBySubject(subjectRepository
                 .findById(subjectId)
                 .orElseThrow(NoSuchElementException::new)));
 
         return labListByStudents.stream()
                 .distinct()
                 .filter(labListBySubjects::contains)
+                .map(e -> LabByStudentIdAndSubjectIdDto.builder()
+                            .description(e.getLabTheme())
+                            .id(e.getId())
+                            .number(e.getLabNumber())
+                            .subjectId(subjectId)
+                            .build())
                 .collect(Collectors.toSet());
 
     }

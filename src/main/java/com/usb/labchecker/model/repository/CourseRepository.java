@@ -10,6 +10,6 @@ import java.util.List;
 
 @Repository
 public interface CourseRepository extends CrudRepository<Course, Integer> {
-    Iterable<Course> getAllByGroup(Group group);
+    List<Course> getAllByGroup(Group group);
     List<Course> findAllBySubject(Subject subject);
 }

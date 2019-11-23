@@ -3,7 +3,6 @@ package com.usb.labchecker.controller;
 import com.usb.labchecker.model.dto.StudentDto;
 import com.usb.labchecker.model.entity.Student;
 import com.usb.labchecker.model.service.StudentService;
-import io.swagger.models.auth.In;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;

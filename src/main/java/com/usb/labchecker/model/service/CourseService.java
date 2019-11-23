@@ -5,6 +5,7 @@ import com.usb.labchecker.model.entity.Group;
 import com.usb.labchecker.model.repository.CourseRepository;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.NoSuchElementException;
 
 @Service
@@ -19,11 +20,11 @@ public class CourseService {
         return courseRepository.findById(id).orElseThrow(NoSuchElementException::new);
     }
 
-    public Iterable<Course> getAllCourses() {
-        return courseRepository.findAll();
+    public List<Course> getAllCourses() {
+        return (List<Course>)courseRepository.findAll();
     }
 
-    public Iterable<Course> getAllCoursesForGroupId(Group group) {
+    public List<Course> getAllCoursesForGroupId(Group group) {
         return courseRepository.getAllByGroup(group);
     }
 }

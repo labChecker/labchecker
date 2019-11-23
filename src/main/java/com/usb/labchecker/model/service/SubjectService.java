@@ -1,9 +1,10 @@
 package com.usb.labchecker.model.service;
 
-import com.usb.labchecker.model.entity.Course;
-import com.usb.labchecker.model.entity.Lab;
+import com.usb.labchecker.model.dto.SubjectByStudentIdDto;
 import com.usb.labchecker.model.entity.Subject;
-import com.usb.labchecker.model.repository.*;
+import com.usb.labchecker.model.repository.LabResultRepository;
+import com.usb.labchecker.model.repository.StudentRepository;
+import com.usb.labchecker.model.repository.SubjectRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -27,18 +28,28 @@ public class SubjectService {
 
     public Subject getOne(int id) {
         return subjectRepository.findById(id).orElseThrow(NoSuchElementException::new);
+
     }
 
     public Iterable<Subject> getAllSubjects() {
         return subjectRepository.findAll();
     }
 
-    public List<Subject> getSubjectsByStudentId(Integer studentId) {
-        List<Subject> subjectList = new ArrayList<>();
+    public List<SubjectByStudentIdDto> getSubjectsByStudentId(Integer studentId) {
+        List<SubjectByStudentIdDto> subjectList = new ArrayList<>();
         labResultRepository
                 .findAllByStudent(studentRepository.getOne(studentId))
-                .forEach(e -> subjectList.add(e.getLab().getCourse().getSubject()));
+                .forEach(e -> {
+                    SubjectByStudentIdDto subject = SubjectByStudentIdDto.builder()
+                            .id(e.getLab().getCourse().getSubject().getId())
+                            .teacher(e.getLab().getCourse().getTeacher().getFirstName() +
+                                    e.getLab().getCourse().getTeacher().getLastName())
+                            .name(e.getLab().getCourse().getSubject().getName())
+                            .build();
+                    subjectList.add(subject);
+                });
         return subjectList;
 
     }
 }
+

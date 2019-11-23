@@ -10,6 +10,6 @@ import java.util.List;
 
 @Repository
 public interface LabResultRepository extends CrudRepository<LabResult, Integer> {
-    Iterable<LabResult> findAllByStudent(Student student);
-    Iterable<LabResult> findAllByLabIn(List<Lab> labList);
+    List<LabResult> findAllByStudent(Student student);
+    List<LabResult> findAllByLabIn(List<Lab> labList);
 }

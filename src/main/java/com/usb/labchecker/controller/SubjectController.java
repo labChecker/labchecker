@@ -1,5 +1,6 @@
 package com.usb.labchecker.controller;
 
+import com.usb.labchecker.model.dto.SubjectByStudentIdDto;
 import com.usb.labchecker.model.entity.Subject;
 import com.usb.labchecker.model.service.SubjectService;
 import org.springframework.web.bind.annotation.*;
@@ -22,7 +23,7 @@ public class SubjectController {
     }
 
     @GetMapping
-    public List<Subject> getSubjectsByStudentId(@RequestParam(name = "studentId") Integer studentId){
+    public List<SubjectByStudentIdDto> getSubjectsByStudentId(@RequestParam(name = "studentId") Integer studentId){
         return subjectService.getSubjectsByStudentId(studentId);
     }
 }

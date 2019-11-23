@@ -22,8 +22,8 @@ public class GroupService {
         return groupRepository.findById(id).orElseThrow(NoSuchElementException::new);
     }
 
-    public Iterable<Group> getAllGroups() {
-        return groupRepository.findAll();
+    public List<Group> getAllGroups() {
+        return (List<Group>)groupRepository.findAll();
     }
 
     public Group getByName(String name) {
@@ -31,7 +31,7 @@ public class GroupService {
     }
 
     public Map<Integer, String> getGroupListMap() {
-        List <Group> groups = (List<Group>) getAllGroups();
+        List <Group> groups = getAllGroups();
         return groups.stream()
                 .collect(Collectors.toMap(Group::getId, Group::getName));
     }
