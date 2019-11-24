@@ -1,6 +1,6 @@
 package com.usb.labchecker.model.service;
 
-import com.usb.labchecker.model.dto.LabResultBySubjectIdAndStudentIdDto;
+import com.usb.labchecker.model.dto.LabResultByStudentIdDto;
 import com.usb.labchecker.model.dto.LabResultDto;
 import com.usb.labchecker.model.entity.LabResult;
 import com.usb.labchecker.model.repository.*;
@@ -39,12 +39,12 @@ public class LabResultService {
         return labResultRepository.findAll();
     }
 
-    public Set<LabResultBySubjectIdAndStudentIdDto> findLabResultsForStudent(Integer studentId) {
+    public Set<LabResultByStudentIdDto> findLabResultsForStudent(Integer studentId) {
 
         return labResultRepository
                 .findAllByStudent(studentRepository.getOne(studentId))
                 .stream()
-                .map(e-> LabResultBySubjectIdAndStudentIdDto.builder()
+                .map(e-> LabResultByStudentIdDto.builder()
                             .labResultId(e.getId())
                             .labId(e.getLab().getId())
                             .result(e.getMark())
@@ -56,8 +56,8 @@ public class LabResultService {
                 .collect(Collectors.toSet());
     }
 
-    public Set<LabResultBySubjectIdAndStudentIdDto> getLabResultsByStudentIdAndSubjectId(Integer studentId,
-                                                                                         Integer subjectId) {
+    public Set<LabResultByStudentIdDto> getLabResultsByStudentIdAndSubjectId(Integer studentId,
+                                                                             Integer subjectId) {
         List<LabResult> labResultListByStudent = labResultRepository
                 .findAllByStudent(studentRepository.getOne(studentId));
         List<LabResult> labResultListBySubject = labResultRepository
@@ -70,7 +70,7 @@ public class LabResultService {
         return labResultListByStudent.stream()
                 .distinct()
                 .filter(labResultListBySubject::contains)
-                .map(e-> LabResultBySubjectIdAndStudentIdDto.builder()
+                .map(e-> LabResultByStudentIdDto.builder()
                         .labResultId(e.getId())
                         .labId(e.getLab().getId())
                         .result(e.getMark())

@@ -1,6 +1,7 @@
 package com.usb.labchecker.model.service;
 
-import com.usb.labchecker.model.dto.LabByStudentIdAndSubjectIdDto;
+import com.usb.labchecker.model.dto.LabByIdDto;
+import com.usb.labchecker.model.dto.LabByStudentIdDto;
 import com.usb.labchecker.model.entity.Course;
 import com.usb.labchecker.model.entity.Group;
 import com.usb.labchecker.model.entity.Lab;
@@ -13,7 +14,6 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.NoSuchElementException;
-import java.util.Set;
 import java.util.stream.Collectors;
 
 @Service
@@ -45,24 +45,40 @@ public class LabService {
         return labRepository.findById(id).orElseThrow(NoSuchElementException::new);
     }
 
-    public Iterable<Lab> getAllLabs() {
-        return labRepository.findAll();
+    public List<Lab> getAllLabs() {
+        return (List<Lab>)labRepository.findAll();
     }
 
-    public Iterable<Lab> getAllLabsForTelegramId(int telegramId) {
+    public List<LabByIdDto> getAllLabsForTelegramId(int telegramId) {
         Group group = studentService.getStudentByTelegramId(telegramId).getGroup();
         List<Course> courseList = new ArrayList<>(courseService.getAllCoursesForGroupId(group));
-        return labRepository.findAllByCourseIsIn(courseList);
+        return labRepository.findAllByCourseIsIn(courseList).stream()
+                .map(e -> LabByIdDto.builder()
+                        .id(e.getId())
+                        .description(e.getLabTheme())
+//                        .docs(e.getDocs())
+                        .number(e.getLabNumber())
+                .build())
+                .collect(Collectors.toList());
     }
 
-    public List<Lab> getLabListByStudentId(Integer studentId) {
-        List<Lab> resultList = new ArrayList<>();
+    public List<LabByStudentIdDto> getLabListByStudentId(Integer studentId) {
+        List<LabByStudentIdDto> resultList = new ArrayList<>();
         labResultRepository.findAllByStudent(studentService.getOne(studentId))
-                .forEach(e -> resultList.add(e.getLab()));
+                .forEach(e -> resultList.add(LabByStudentIdDto.builder()
+                        .description(e.getLab().getLabTheme())
+                        .id(e.getId())
+                        .number(e.getLab().getLabNumber())
+                        .subjectId(e.getLab()
+                                .getCourse()
+                                .getSubject()
+                                .getId())
+//                            .docs(e.getDocs())
+                        .build()));
         return resultList;
     }
 
-    public Set<LabByStudentIdAndSubjectIdDto> getLabListByStudentIdAndSubjectId(Integer studentId, Integer subjectId) {
+    public List<LabByStudentIdDto> getLabListByStudentIdAndSubjectId(Integer studentId, Integer subjectId) {
         List<Lab> labListByStudents = new ArrayList<>();
         labResultRepository.findAllByStudent(studentService.getOne(studentId))
                 .forEach(e -> labListByStudents.add(e.getLab()));
@@ -74,13 +90,14 @@ public class LabService {
         return labListByStudents.stream()
                 .distinct()
                 .filter(labListBySubjects::contains)
-                .map(e -> LabByStudentIdAndSubjectIdDto.builder()
+                .map(e -> LabByStudentIdDto.builder()
                             .description(e.getLabTheme())
                             .id(e.getId())
                             .number(e.getLabNumber())
                             .subjectId(subjectId)
+//                            .docs(e.getDocs())
                             .build())
-                .collect(Collectors.toSet());
+                .collect(Collectors.toList());
 
     }
 

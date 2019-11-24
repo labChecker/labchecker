@@ -1,12 +1,12 @@
 package com.usb.labchecker.controller;
 
-import com.usb.labchecker.model.dto.LabByStudentIdAndSubjectIdDto;
+import com.usb.labchecker.model.dto.LabByIdDto;
+import com.usb.labchecker.model.dto.LabByStudentIdDto;
 import com.usb.labchecker.model.entity.Lab;
 import com.usb.labchecker.model.service.LabService;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Set;
 
 @RestController
 @RequestMapping("/api/v1/labs")
@@ -18,7 +18,7 @@ public class LabController {
     }
 
     @GetMapping("student/{id}")
-    public Iterable<Lab> getLabsForStudent(@PathVariable("id") int telegramId) {
+    public List<LabByIdDto> getLabsForStudent(@PathVariable("id") int telegramId) {
         return labService.getAllLabsForTelegramId(telegramId);
     }
 
@@ -28,13 +28,13 @@ public class LabController {
     }
 
     @GetMapping
-    public List<Lab> getLabListByStudentId(@RequestParam(name = "studentId") Integer studentId){
+    public List<LabByStudentIdDto> getLabListByStudentId(@RequestParam(name = "studentId") Integer studentId){
         return labService.getLabListByStudentId(studentId);
     }
 
     @GetMapping("/by_student_and_subject")
-    public Set<LabByStudentIdAndSubjectIdDto> getLabListByStudentIdAndSubjectId(@RequestParam(name = "studentId") Integer studentId,
-                                                                                @RequestParam(name = "subjectId") Integer subjectId){
+    public List<LabByStudentIdDto> getLabListByStudentIdAndSubjectId(@RequestParam(name = "studentId") Integer studentId,
+                                                                     @RequestParam(name = "subjectId") Integer subjectId){
         return labService.getLabListByStudentIdAndSubjectId(studentId, subjectId);
     }
 

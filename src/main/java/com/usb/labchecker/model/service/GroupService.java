@@ -1,5 +1,6 @@
 package com.usb.labchecker.model.service;
 
+import com.usb.labchecker.model.dto.GroupByIdDto;
 import com.usb.labchecker.model.entity.Group;
 import com.usb.labchecker.model.repository.GroupRepository;
 import org.springframework.stereotype.Service;
@@ -30,10 +31,14 @@ public class GroupService {
         return groupRepository.findByName(name).orElseThrow(NoSuchElementException::new);
     }
 
-    public Map<Integer, String> getGroupListMap() {
+    public List<GroupByIdDto> getGroupList() {
         List <Group> groups = getAllGroups();
         return groups.stream()
-                .collect(Collectors.toMap(Group::getId, Group::getName));
+                .map(e -> GroupByIdDto.builder()
+                        .id(e.getId())
+                        .name(e.getName())
+                .build())
+                .collect(Collectors.toList());
     }
 
 }

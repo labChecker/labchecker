@@ -1,11 +1,12 @@
 package com.usb.labchecker.controller;
 
+import com.usb.labchecker.model.dto.GroupByIdDto;
 import com.usb.labchecker.model.service.GroupService;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.Map;
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/v1/groups")
@@ -17,8 +18,8 @@ public class GroupController {
     }
 
     @GetMapping
-    public Map<Integer, String> getGroupListMap(){
-        return groupService.getGroupListMap();
+    public List<GroupByIdDto> getGroupListMap(){
+        return groupService.getGroupList();
     }
 
 }

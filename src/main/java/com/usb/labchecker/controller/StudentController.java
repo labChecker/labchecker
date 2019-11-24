@@ -1,5 +1,6 @@
 package com.usb.labchecker.controller;
 
+import com.usb.labchecker.model.dto.StudentByTelegramIdDto;
 import com.usb.labchecker.model.dto.StudentDto;
 import com.usb.labchecker.model.entity.Student;
 import com.usb.labchecker.model.service.StudentService;
@@ -29,13 +30,13 @@ public class StudentController {
     }
 
     @GetMapping("/telegramId/{id}")
-    public Integer getStudentIdByTelegramId(@PathVariable("id") Integer telegramId){
+    public StudentByTelegramIdDto getStudentIdByTelegramId(@PathVariable("id") Integer telegramId){
         return studentService.getStudentIdByTelegramId(telegramId);
     }
 
     @GetMapping("/{githubId}/variant")
     public Integer getStudentVariantByGithubId(@PathVariable("githubId") Integer githubId){
-        return studentService.getStudentVariantByGithubId(githubId).getNumber();
+        return studentService.getStudentVariantByGithubId(githubId);
     }
 
 

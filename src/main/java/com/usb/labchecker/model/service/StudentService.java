@@ -1,6 +1,7 @@
 package com.usb.labchecker.model.service;
 
 import com.usb.labchecker.model.dto.GithubUserDto;
+import com.usb.labchecker.model.dto.StudentByTelegramIdDto;
 import com.usb.labchecker.model.dto.StudentDto;
 import com.usb.labchecker.model.entity.Student;
 import com.usb.labchecker.model.entity.Variant;
@@ -58,20 +59,27 @@ public class StudentService {
         return studentRepository.getByTelegramId(telegramId).orElseThrow(NoSuchElementException::new);
     }
 
-    public Integer getStudentIdByTelegramId(Integer telegramId) {
-        return studentRepository.getByTelegramId(telegramId).orElseThrow(NoSuchElementException::new).getId();
+    public StudentByTelegramIdDto getStudentIdByTelegramId(Integer telegramId) {
+        return StudentByTelegramIdDto.builder()
+                .studentId(studentRepository.getByTelegramId(telegramId)
+                .orElseThrow(NoSuchElementException::new).getId())
+                .build();
     }
 
-    public Variant getStudentVariantByGithubId(Integer githubId) {
+    public Integer getStudentVariantByGithubId(Integer githubId) {
         try {
             ResponseEntity<GithubUserDto> answer = restTemplate
                     .getForEntity(GITHUB_API_URL_PREFIX +
                             githubId, GithubUserDto.class);
             Student studentToFind = studentRepository.findByGithubLink(Objects.requireNonNull(answer.getBody()).getLogin());
-            return labResultRepository.findAll().iterator().next().getVariant();
+            return labResultRepository.findAllByStudent(studentToFind)
+                    .iterator()
+                    .next()
+                    .getVariant()
+                    .getNumber();
         } catch (Exception e) {
 
         }
-        return new Variant();
+        return -1;
     }
 }
